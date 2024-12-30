@@ -6,6 +6,7 @@ import { MdAdd } from 'react-icons/md'
 import Modal from 'react-modal'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance';
+import moment from "moment"
 
 const Home = () => {
 
@@ -16,6 +17,7 @@ const Home = () => {
   })
 
   const [userInfo, setUserInfo] = useState(null);
+  const [allNotes, setAllNotes] = useState([])
 
   const navigate = useNavigate();
 
@@ -33,38 +35,42 @@ const Home = () => {
     }
   };
 
+  const getAllNotes = async () => {
+    try {
+      const response = await axiosInstance.get('/get-all-notes')
+      if (response.data && response.data.notes) {
+        setAllNotes(response.data.notes);
+      }
+    } catch (error) {
+      console.log("An unexpected error occurred. Please try again")
+    }
+  }
+
   useEffect(() => {
+    getAllNotes();
     getUserInfo();
     return () => { };
   }, []);
 
   return (
     <>
-      <Navbar userInfo = {userInfo}/>
+      <Navbar userInfo={userInfo} />
 
       <div className="container mx-auto">
         <div className='grid grid-cols-3 gap-4 mt-8'>
-          <NoteCard
-            title="Meeting"
-            date="31 Dec 2024"
-            content="Hello I have to tell you about the meeting"
-            tags="#meeting"
-            isPinned={true}
-            onEdit={() => { }}
-            onDelete={() => { }}
-            onPinNote={() => { }}
-          />
-          <NoteCard
-            title="Meeting"
-            date="31 Dec 2024"
-            content="Hello I have to tell you about the meeting"
-            tags="#meeting"
-            isPinned={true}
-            onEdit={() => { }}
-            onDelete={() => { }}
-            onPinNote={() => { }}
-          />
-
+          {allNotes.map((item, index) => (
+            <NoteCard
+              key={item._id}
+              title={item.title}
+              date={moment(item.createdOn).format('Do MM YYYY')}
+              content={item.content}
+              tags={item.tags}
+              isPinned={item.isPinned}
+              onEdit={() => { }}
+              onDelete={() => { }}
+              onPinNote={() => { }}
+            />
+          ))}
         </div>
       </div>
       <button className='w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 absolute right-10 bottom-10'
