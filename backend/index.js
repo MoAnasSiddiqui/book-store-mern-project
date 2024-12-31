@@ -36,19 +36,16 @@ app.post("/create-account", async (req, res) => {
             .status(400)
             .json({ error: true, message: "Full Name is required" });
     }
-
     if (!email) {
         return res
             .status(400)
             .json({ error: true, message: "Email is required" });
     }
-
     if (!password) {
         return res
             .status(400)
             .json({ error: true, message: "Password is required" });
     }
-
     const isUser = await User.findOne({ email: email })
 
     if (isUser) {

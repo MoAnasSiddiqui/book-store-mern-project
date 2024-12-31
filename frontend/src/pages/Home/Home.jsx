@@ -10,7 +10,7 @@ import moment from "moment"
 
 const Home = () => {
 
-  const [openAddEditModal, setOpenEditModal] = useState({
+  const [openAddEditModal, setOpenAddEditModal] = useState({
     isShown: false,
     type: "add",
     data: null
@@ -20,6 +20,10 @@ const Home = () => {
   const [allNotes, setAllNotes] = useState([])
 
   const navigate = useNavigate();
+
+  const handleEdit = (noteDetails) => {
+    setOpenAddEditModal ({ isShown: true, data: noteDetails, type:"edit"})
+  }
 
   const getUserInfo = async () => {
     try {
@@ -66,7 +70,7 @@ const Home = () => {
               content={item.content}
               tags={item.tags}
               isPinned={item.isPinned}
-              onEdit={() => { }}
+              onEdit={() => handleEdit(item)}
               onDelete={() => { }}
               onPinNote={() => { }}
             />
@@ -75,7 +79,7 @@ const Home = () => {
       </div>
       <button className='w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 absolute right-10 bottom-10'
         onClick={() => {
-          setOpenEditModal({ isShown: true, type: 'add', data: null });
+          setOpenAddEditModal({ isShown: true, type: 'add', data: null });
         }}>
         <MdAdd className="text=[32px] text-white" />
       </button>
@@ -96,8 +100,10 @@ const Home = () => {
           type={openAddEditModal.type}
           noteData={openAddEditModal.data}
           onClose={() => {
-            setOpenEditModal({ isShown: false, type: "add", data: null })
-          }} />
+            setOpenAddEditModal({ isShown: false, type: "add", data: null })
+          }}
+          getAllNotes={getAllNotes}
+        />
       </Modal>
     </>
   )
