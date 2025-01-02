@@ -158,6 +158,7 @@ app.post("/add-note", authenticateToken, async (req, res) => {
             content,
             tags: tags || [],
             createdOn: new Date().getTime(),
+            updatedOn: new Date().getTime(),
             userId: user._id,
         });
 
@@ -197,6 +198,7 @@ app.put("/edit-note/:noteId", authenticateToken, async (req, res) => {
         if (content) note.content = content
         if (tags) note.tags = tags
         if (isPinned) note.isPinned = isPinned
+        note.updatedOn = new Date().getTime()
 
         await note.save()
 
