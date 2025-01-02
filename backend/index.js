@@ -157,6 +157,7 @@ app.post("/add-note", authenticateToken, async (req, res) => {
             title,
             content,
             tags: tags || [],
+            createdOn: new Date().getTime(),
             userId: user._id,
         });
 
